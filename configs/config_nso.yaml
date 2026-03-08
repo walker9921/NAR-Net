@@ -1,0 +1,65 @@
+config: configs/config_nso.yaml
+model_name: NAR_Net_NKCS
+scale: 1
+stages: 6
+patch_size: 256
+rgb_range: 1.0
+colors: 1
+
+gpu_ids:
+  - 0
+threads: 8
+amp: true
+grad_clip_norm: 0.5
+
+data_path: datasets
+training_dataset: BSD68
+data_repeat: 1
+data_augment: 1
+
+epochs: 50
+batch_size: 12
+use_checkpoint: true
+warmup_epochs: 0
+log_every: 25
+test_every: 1
+save_image: true
+multi_cr_list: [0.01, 0.04, 0.10, 0.25, 0.50]
+
+optimizer: AdamW
+lr: 0.00025
+lr_sensing_factor: 1
+eta_min: 1.0e-05
+weight_decay: 0.01
+supported_lr_resolutions:
+  - [256, 256]
+
+loss_weights:
+  l1: 1
+  pt: 1
+  fft: 0.02
+  ortho: 0
+
+prior:
+  dim: 48
+  head_dim: 16
+  window_size: 8
+  hsb_sr: 2
+  enc_blocks: [2, 2, 2]
+  dec_blocks: [2, 2, 2]
+  mid_blocks: 2
+
+sensing:
+  type: NKCS
+  binary: false
+  binarization_mode: ste
+  normalize: true
+
+eval_sets:
+  - Set11
+  - BSD68
+  - McM
+test_pad_if_needed: true
+
+log_path: ./experiments-NAR_Net-NKCS
+log_name: NAR_Net-NKCS
